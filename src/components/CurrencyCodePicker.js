@@ -7,22 +7,17 @@ import {
 } from "../store/reducers/RateReducer";
 import { updateCurrencyCode } from "../store/actions/RateActions";
 
-export class CurrencyCodePicker extends React.Component {
-  constructor(props) {
-    super(props);
-    this.onChange = this.onChange.bind(this);
-  }
-  onChange(e) {
+export function CurrencyCodePicker({currencyCode, supportedCurrencies, currencyCodeUpdate}) {
+  const onChange = (e) => {
     const currencyCode = e.target.value;
-    this.props.currencyCodeUpdate(currencyCode);
+    currencyCodeUpdate(currencyCode);
   }
-  render() {
-    const { currencyCode, supportedCurrencies } = this.props;
+
     return (
       <select
         className="currencyCode"
         value={currencyCode}
-        onChange={this.onChange}
+        onChange={onChange}
       >
         {supportedCurrencies.map((code) => (
           <option key={code} value={code}>
@@ -31,7 +26,6 @@ export class CurrencyCodePicker extends React.Component {
         ))}
       </select>
     );
-  }
 }
 
 // prop types
