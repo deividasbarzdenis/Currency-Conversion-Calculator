@@ -1,46 +1,34 @@
-import React, {useMemo, useState} from "react";
+import React, {useCallback, useMemo, useState} from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { getAmount } from "../store/reducers/RateReducer";
-import { amountChanged } from "../store/actions/RateActions";
-import { debounce } from "lodash";
+import {connect, useDispatch, useSelector} from "react-redux";
+import {getAmount} from "../store/reducers/RateReducer";
+import {amountChanged} from "../store/actions/RateActions";
+import {debounce} from "lodash";
 
-export function AmountField ({amount, changeAmount}) {
-  const [displayAmount, setDisplayAmount] = useState(amount);
-  const onAmountChanged = useMemo(() => debounce(changeAmount, 500), [changeAmount]);
+export function AmountField() {
+    const dispatch = useDispatch();
+    const amount = useSelector();
+    const changeAmount = useCallback(
+        (newAmount) => dispatch(amountChanged(newAmount)),
+        []
+    ); //useCallback hooks wait while user stop typing and then updates change amount,
+    // useCallback hooks help for child component to not render unnecessary.
 
-  const onChange = (e) => {
-    let newAmount = e.target.value;
-    setDisplayAmount(newAmount);
-    onAmountChanged(newAmount);
-  }
+    const [displayAmount, setDisplayAmount] = useState(amount);
+    const onAmountChanged = useMemo(() => debounce(changeAmount, 500), [changeAmount]);
+
+    const onChange = (e) => {
+        let newAmount = e.target.value;
+        setDisplayAmount(newAmount);
+        onAmountChanged(newAmount);
+    }
     return (
-      <form className="ExchangeRate-form">
-        <input type="text" value={displayAmount} onChange={onChange} />
-      </form>
+        <form className="ExchangeRate-form">
+            <input type="text" value={displayAmount} onChange={onChange}/>
+        </form>
     );
 }
 
-// prop types
-AmountField.propTypes = {
-  amount: PropTypes.string,
-  changeAmount: PropTypes.func,
-};
-
 // redux stuff
-function mapStateToProps(state) {
-  return {
-    amount: getAmount(state),
-  };
-}
 
-function mapDispatchToProps(dispatch) {
-  return {
-    changeAmount: (newAmount) => dispatch(amountChanged(newAmount)),
-  };
-}
-
-export const AmountFieldContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AmountField);
+export const AmountFieldContainer = connect()(AmountField);
