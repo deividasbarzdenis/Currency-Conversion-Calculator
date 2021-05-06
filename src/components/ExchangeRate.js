@@ -1,6 +1,5 @@
 import React, {useEffect} from "react";
-import PropTypes from "prop-types";
-import { connect, useSelector } from "react-redux";
+import { connect, useSelector, useDispatch } from "react-redux";
 import { ratesUpdated } from "../store/actions/RateActions";
 import {
   getCurrencyCode,
@@ -11,9 +10,11 @@ import { CurrencyCodePickerContainer } from "./CurrencyCodePicker";
 import { getExchangeRates } from "../api";
 import { AmountFieldContainer } from "./AmountField";
 
-export function ExchangeRate({ updateRates }) {
+export function ExchangeRate() {
+    const dispatch = useDispatch(); //this function give us that we can dispatch redux actions
   const supportedCurrencies = useSelector(getSupportedCurrencies);
   const  currencyCode = useSelector(getCurrencyCode);
+  const updateRates = (rates) => dispatch(ratesUpdated(rates));
 
   useEffect(() => {
     getLatestExchangeRates()
@@ -21,7 +22,7 @@ export function ExchangeRate({ updateRates }) {
 
   const getLatestExchangeRates = () => {
     getExchangeRates(currencyCode, supportedCurrencies).then((rates) => {
-      updateRates(rates);
+        updateRates(rates);
     });
   }
     return (
@@ -42,17 +43,9 @@ export function ExchangeRate({ updateRates }) {
 }
 
 // props types
-ExchangeRate.propTypes = {
-  updateCurrencyCode: PropTypes.func,
-};
 
 // redux stuff
-function mapDispatchToProps(dispatch) {
-  return {
-    updateRates: (rates) => dispatch(ratesUpdated(rates)),
-  };
-}
 export const ExchangeRateContainer = connect(
   null,
-  mapDispatchToProps
+  null,
 )(ExchangeRate);
