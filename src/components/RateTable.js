@@ -8,6 +8,7 @@ import {getName} from "../store/reducers/UserReducer";
 export function RateTable({rates, amount, name}) {
 
     const nameRef = useRef();
+    const countRef = useRef(0); //count when bounce method is called, is useful for gadder information
     return (
         <table className="ExchangeRate-table">
             <tbody>
@@ -52,6 +53,7 @@ export function RateTable({rates, amount, name}) {
                 duration: 1900,
             });
         bounce.applyTo(nameRef.current);
+        countRef.current++;
     }
 }
 

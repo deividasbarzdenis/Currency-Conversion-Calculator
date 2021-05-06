@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { ratesUpdated } from "../store/actions/RateActions";
@@ -11,23 +11,16 @@ import { CurrencyCodePickerContainer } from "./CurrencyCodePicker";
 import { getExchangeRates } from "../api";
 import { AmountFieldContainer } from "./AmountField";
 
-export class ExchangeRate extends React.Component {
-  constructor(props) {
-    super(props);
-    this.getLatestExchangeRates();
-  }
-  componentDidUpdate(prevProps) {
-    if (this.props.currencyCode !== prevProps.currencyCode) {
-      this.getLatestExchangeRates();
-    }
-  }
-  getLatestExchangeRates() {
-    const { currencyCode, updateRates, supportedCurrencies } = this.props;
+export function ExchangeRate({ currencyCode, updateRates, supportedCurrencies }) {
+  useEffect(() => {
+    getLatestExchangeRates()
+  }, [currencyCode]);
+
+  const getLatestExchangeRates = () => {
     getExchangeRates(currencyCode, supportedCurrencies).then((rates) => {
       updateRates(rates);
     });
   }
-  render() {
     return (
       <>
         <section>
@@ -43,7 +36,6 @@ export class ExchangeRate extends React.Component {
         </section>
       </>
     );
-  }
 }
 
 // props types
