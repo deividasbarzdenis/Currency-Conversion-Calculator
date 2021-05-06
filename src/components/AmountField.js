@@ -1,7 +1,5 @@
 import React, {useCallback, useMemo, useState} from "react";
-import PropTypes from "prop-types";
-import {connect, useDispatch, useSelector} from "react-redux";
-import {getAmount} from "../store/reducers/RateReducer";
+import { useDispatch, useSelector} from "react-redux";
 import {amountChanged} from "../store/actions/RateActions";
 import {debounce} from "lodash";
 
@@ -30,5 +28,3 @@ export function AmountField() {
 }
 
 // redux stuff
-
-export const AmountFieldContainer = connect()(AmountField);
